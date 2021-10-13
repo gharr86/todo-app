@@ -29,6 +29,9 @@ export const toDoSlice = createSlice({
       .addCase(addToDo.rejected, (state: ToDoListSlice, action) => {
         state.status = 'error';
       })
+      .addCase(toggleToDo.pending, (state: ToDoListSlice, action) => {
+        state.status = 'fetching';
+      })
       .addCase(toggleToDo.fulfilled, (state: ToDoListSlice, action) => {
         if (action.payload) {
           state.data = action.payload.data;
