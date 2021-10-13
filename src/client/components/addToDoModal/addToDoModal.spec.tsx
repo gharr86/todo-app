@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '../../testUtils';
+import '@testing-library/jest-dom/extend-expect';
 
 import AddToDoModal from './addToDoModal';
 import { State } from '../../types';
