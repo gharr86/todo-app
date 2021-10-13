@@ -1,0 +1,12 @@
+@mixin display-flex (
+  $justify-content,
+  $align-content: 'flex-start',
+  $align-items: 'center',
+  $flow: 'row nowrap'
+) {
+  display: flex;
+  align-items: $align-items;
+  align-content: $align-content;
+  justify-content: $justify-content;
+  flex-flow: $flow;
+}
