@@ -1,20 +1,24 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { ToDoData } from '../../types';
 
-const baseURL: string = 'http://localhost:3001';
+const config: AxiosRequestConfig = {
+  baseURL: 'http://localhost:3001',
+};
+
+const request: AxiosInstance = axios.create(config);
 
 class ApiService {
   static getToDoList(): Promise<AxiosResponse> {
-    return axios.get(`${baseURL}/todos/get`);
+    return request.get('/todos/get');
   }
 
   static addToDo(toDo: ToDoData): Promise<AxiosResponse> {
-    return axios.post(`${baseURL}/todos/save`, toDo);
+    return request.post('/todos/save', toDo);
   }
 
   static toggleToDo(id: string): Promise<AxiosResponse> {
-    return axios.put(`${baseURL}/todos/${id}`);
+    return request.put(`/todos/${id}`);
   }
 }
 
