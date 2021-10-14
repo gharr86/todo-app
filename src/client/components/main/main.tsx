@@ -5,6 +5,7 @@ import { Button, Typography } from '@mui/material';
 
 import ToDoElement from '../toDoElement/toDoElement';
 import AddToDoModal from '../addToDoModal/addToDoModal';
+import Spinner from '../spinner/spinner';
 
 import { ToDoData } from '../../types';
 
@@ -12,6 +13,7 @@ import { openAddToDoModal } from '../../store/slices/addToDoModal';
 
 const Main = (): JSX.Element => {
   const toDoList = useAppSelector(state => state.toDoList.data);
+  const requestStatus = useAppSelector(state => state.toDoList.status);
   const dispatch = useAppDispatch();
 
   return (
@@ -66,6 +68,10 @@ const Main = (): JSX.Element => {
         </div>
       </section>
       <AddToDoModal />
+      {
+        requestStatus === 'fetching'
+        && <Spinner />
+      }
     </main>
   );
 }
