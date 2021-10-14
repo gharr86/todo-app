@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor, RenderResult } from '../../testUtils';
+import { render, fireEvent, RenderResult } from '../../testUtils';
 import '@testing-library/jest-dom/extend-expect';
 
 import Main from './main';
