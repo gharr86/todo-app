@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, RenderResult } from '../../testUtils';
+import '@testing-library/jest-dom/extend-expect';
 
 import Main from './main';
 import { State } from '../../types';
@@ -34,25 +35,41 @@ describe('<Main />', () => {
     expect(getByText(/title/i)).toBeInTheDocument();
   });
 
-  test('when new element is added, it s rendered in the "To Do" section', () => {
-    const { getByRole, getByTestId } = renderMain();
+  test('when there is an undone todo, it s rendered in the "To Do" section', () => {
+    const newState = {
+      toDoList: {
+        ...basicState.toDoList,
+        data: [
+          {
+            id: '123abc',
+            title: 'Test ToDo',
+            isDone: false,
+          },
+        ],
+      },
+    };
 
-    fireEvent.click(getByRole('button', { name: /add todo/i }));
-    fireEvent.change(getByRole('textbox'), { target: { value: 'Test ToDo' } });
-    fireEvent.click(getByRole('button', {name: /add/i }));
+    const { getByTestId } = renderMain(newState);
 
     expect(getByTestId('todo-content').children).toHaveLength(1);
   });
 
   test('when an element is marked as done, it passes to the "Done" section', () => {
-    const { getByRole, getByTestId } = renderMain();
+    const newState = {
+      toDoList: {
+        ...basicState.toDoList,
+        data: [
+          {
+            id: '123abc',
+            title: 'Test ToDo',
+            isDone: true,
+          },
+        ],
+      },
+    };
 
-    fireEvent.click(getByRole('button', { name: /add todo/i }));
-    fireEvent.change(getByRole('textbox'), { target: { value: 'Test ToDo' } });
-    fireEvent.click(getByRole('button', {name: /add/i }));
-    fireEvent.click(getByRole('checkbox', { name: /done/i }));
-    
-    expect(getByTestId('todo-content').children).toHaveLength(0);
+    const { getByTestId } = renderMain(newState);
+
     expect(getByTestId('done-content').children).toHaveLength(1);
   });
 });
