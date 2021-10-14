@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor, RenderResult } from '../../testUtils';
+import '@testing-library/jest-dom/extend-expect';
 
 import Main from './main';
 import { State, ToDoData } from '../../types';
@@ -71,11 +72,14 @@ describe('<Main />', () => {
     ];
     ApiServiceMock.toggleToDo.mockResolvedValueOnce({ data: mockResponse });
 
-    const { getByRole, getByTestId } = renderMain();
+    const { getByRole, getByTestId, getByText } = renderMain();
 
     fireEvent.click(getByRole('button', { name: /add todo/i }));
     fireEvent.change(getByRole('textbox'), { target: { value: 'Test ToDo' } });
     fireEvent.click(getByRole('button', {name: /add/i }));
+
+    await waitFor(() => expect(getByText('Test ToDo')).toBeInTheDocument());
+
     fireEvent.click(getByRole('checkbox', { name: /done/i }));
 
     await waitFor(() => {
