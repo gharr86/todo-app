@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 
 import routes from './routes';
 
-const app = express();
+const app: Application = express();
 const port: number = 3001;
 
 app.use(cors());
