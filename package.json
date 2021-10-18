@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
-    "server": "nodemon --watch './**/*.ts' --exec src src/api/index.ts",
+    "server": "nodemon src/api/index.ts",
     "dev": "run-p server start",
     "build": "react-scripts build",
     "test": "react-scripts test",
