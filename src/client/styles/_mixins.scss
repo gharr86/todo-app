@@ -1,12 +1,12 @@
 @mixin display-flex (
   $justify-content,
-  $align-content: 'flex-start',
   $align-items: 'center',
-  $flow: 'row nowrap'
+  $flow: 'row nowrap',
+  $gap: 0,
 ) {
   display: flex;
   align-items: $align-items;
-  align-content: $align-content;
   justify-content: $justify-content;
   flex-flow: $flow;
+  gap: $gap;
 }

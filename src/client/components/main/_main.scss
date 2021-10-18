@@ -4,7 +4,7 @@
   }
 
   &__todo-list {
-    @include display-flex(center, flex-start, flex-start);
+    @include display-flex(center, flex-start);
   
     &__todo,
     &__done {
@@ -23,15 +23,7 @@
   
     &__todo__content,
     &__done__content {
-      @include display-flex(initial, flex-start, center, row wrap);
-    }
-  
-    .todo-element {
-      margin-right: 20px;
-  
-      &:last-child {
-        margin-right: 0;
-      }
+      @include display-flex(initial, center, row wrap, 20px 20px);
     }
   }
 }

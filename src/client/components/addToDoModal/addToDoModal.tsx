@@ -3,13 +3,14 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import { nanoid } from '@reduxjs/toolkit';
 import { Modal, Box, TextField, Button } from '@mui/material';
+import { SxProps } from '@mui/system';
 
 import { closeAddToDoModal } from '../../store/slices/addToDoModal';
 import { addToDo } from '../../store/slices/toDoList/reducers';
 
 import { ToDoData } from '../../types';
 
-const style = {
+const style: SxProps = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
