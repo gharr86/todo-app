@@ -17,9 +17,9 @@ export const saveData = (newData: AppData): void => {
 };
 
 export const bodyShapeIsOk = (body: ToDoData): boolean => {
-  const idIsOk: boolean = Boolean(body.id) && typeof body.id === 'string';
-  const titleIsOk: boolean = Boolean(body.title) && typeof body.title === 'string';
-  const isDoneIsOk: boolean = body.isDone && typeof body.isDone === 'boolean';
+  const idIsOk: boolean = 'id' in body && typeof body.id === 'string';
+  const titleIsOk: boolean = 'title' in body && typeof body.title === 'string';
+  const isDoneIsOk: boolean = 'isDone' in body && typeof body.isDone === 'boolean';
 
   return idIsOk && titleIsOk && isDoneIsOk;
 };
