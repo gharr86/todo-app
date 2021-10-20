@@ -22,8 +22,6 @@ export const addToDo = (req: Request, res: Response): Response<AppData | string>
   const currentData: AppData = getData();
 
   if (currentData?.data) {
-    console.log('BODY', body);
-    console.log('ISOK', bodyShapeIsOk(body));
     if (bodyShapeIsOk(body)) {
       currentData.data.push(body);
   

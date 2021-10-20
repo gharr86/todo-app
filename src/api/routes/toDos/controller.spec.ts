@@ -5,7 +5,14 @@ import { getData } from './utils';
 
 import { AppData, ToDoData } from '../../types';
 
-jest.mock('./utils');
+jest.mock('./utils', () => {
+  const originalModule = jest.requireActual('./utils');
+
+  return {
+    ...originalModule,
+    getData: jest.fn(),
+  };
+});
 
 const mockGetData = getData as jest.MockedFunction<typeof getData>;
 
