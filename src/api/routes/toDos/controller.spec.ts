@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { getToDoList, addToDo, toggleToDo } from './controller';
-import { getData } from './utils';
+import { getData, saveData } from './utils';
 
 import { AppData, ToDoData } from '../../types';
 
@@ -11,10 +11,12 @@ jest.mock('./utils', () => {
   return {
     ...originalModule,
     getData: jest.fn(),
+    saveData: jest.fn(),
   };
 });
 
 const mockGetData = getData as jest.MockedFunction<typeof getData>;
+const mockSaveData = saveData as jest.MockedFunction<typeof saveData>;
 
 const mockAppData: AppData = {
   data: [
@@ -23,23 +25,23 @@ const mockAppData: AppData = {
       title: 'Test',
       isDone: false,
     },
-    {
-      id: '234bcd',
-      title: 'Test',
-      isDone: false,
-    },
   ],
 };
+let mockRes: Partial<Response>;
+
+beforeEach(() => {
+  mockRes = {
+    status: jest.fn(() => mockRes),
+    json: jest.fn(),
+    send: jest.fn(),
+  };
+});
 
 describe('getToDoList', () => {
   test('when data is received, 200 status is set and data is sent', () => {
     mockGetData.mockReturnValueOnce(mockAppData);
 
     const mockReq: Partial<Request> = {};
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      json: jest.fn(),
-    };
 
     getToDoList(mockReq as Request, mockRes as Response);
 
@@ -51,10 +53,6 @@ describe('getToDoList', () => {
     mockGetData.mockReturnValueOnce(undefined);
 
     const mockReq: Partial<Request> = {};
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      send: jest.fn(),
-    };
 
     getToDoList(mockReq as Request, mockRes as Response);
 
@@ -68,22 +66,18 @@ describe('addToDo', () => {
     mockGetData.mockReturnValueOnce(mockAppData);
   
     const newToDo: ToDoData = {
-      id: '345cde',
+      id: '234bcd',
       title: 'Test',
       isDone: false,
     };
-    const newAppData: AppData = { data: mockAppData.data.concat(newToDo) };
+    const expectedAppData: AppData = { data: mockAppData.data.concat(newToDo) };
     const mockReq: Partial<Request> = { body: newToDo };
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
 
     addToDo(mockReq as Request, mockRes as Response);
 
+    expect(mockSaveData).toHaveBeenCalledWith(expectedAppData);
     expect(mockRes.status).toHaveBeenCalledWith(200);
-    expect(mockRes.json).toHaveBeenCalledWith(newAppData);
+    expect(mockRes.json).toHaveBeenCalledWith(expectedAppData);
   });
 
   test('when body is not OK, 400 status is set and error message is sent', () => {
@@ -94,14 +88,10 @@ describe('addToDo', () => {
       isDone: false,
     };
     const mockReq: Partial<Request> = { body: newToDo };
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
 
     addToDo(mockReq as Request, mockRes as Response);
 
+    expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.send).toHaveBeenCalledWith('Bad request :(');
   });
@@ -110,14 +100,10 @@ describe('addToDo', () => {
     mockGetData.mockReturnValueOnce(undefined);
 
     const mockReq: Partial<Request> = {};
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
 
     addToDo(mockReq as Request, mockRes as Response);
 
+    expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(500);
     expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
   });
@@ -126,27 +112,51 @@ describe('addToDo', () => {
 describe('toggleToDo', () => {
   test('when id exists in saved data, isDone value is changed and data is sent', () => {
     mockGetData.mockReturnValueOnce(mockAppData);
-  
-    const newToDo: ToDoData = {
-      id: '345cde',
-      title: 'Test',
-      isDone: false,
+
+    const expectedAppData: AppData = {
+      data: [
+        {
+          id: '123abc',
+          title: 'Test',
+          isDone: true,
+        },
+        {
+          id: '234bcd',
+          title: 'Test',
+          isDone: false,
+        }
+      ],
     };
-    const newAppData: AppData = { data: mockAppData.data.concat(newToDo) };
     const mockReq: Partial<Request> = { params: { id: '123abc' } };
-    const mockRes: Partial<Response> = {
-      status: jest.fn(() => mockRes),
-      json: jest.fn(),
-      send: jest.fn(),
-    };
     
     toggleToDo(mockReq as Request, mockRes as Response);
 
+    expect(mockSaveData).toHaveBeenCalledWith(expectedAppData);
     expect(mockRes.status).toHaveBeenCalledWith(200);
-    expect(mockRes.json).toHaveBeenCalledWith(newAppData);
+    expect(mockRes.json).toHaveBeenCalledWith(expectedAppData);
   });
 
-  test('', () => {});
+  test('when id doesnt exist, 404 status is set and error message is sent', () => {
+    mockGetData.mockReturnValueOnce(mockAppData);
 
-  test('', () => {});
+    const mockReq: Partial<Request> = { params: { id: 'XXX' } };
+    
+    toggleToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockSaveData).not.toHaveBeenCalled();
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.send).toHaveBeenCalledWith('Not found :(');
+  });
+
+  test('when data is not received, 500 status is set and error message is sent', () => {
+    mockGetData.mockReturnValueOnce(undefined);
+
+    const mockReq: Partial<Request> = { params: { id: '123abc' } };
+
+    toggleToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockSaveData).not.toHaveBeenCalled();
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
+  });
 });
