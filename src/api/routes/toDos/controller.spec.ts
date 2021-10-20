@@ -115,3 +115,31 @@ describe('addToDo', () => {
     expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
   });
 });
+
+describe('toggleToDo', () => {
+  test('when id exists in saved data, isDone value is changed and data is sent', () => {
+    mockGetData.mockReturnValueOnce(mockAppData);
+  
+    const newToDo: ToDoData = {
+      id: '345cde',
+      title: 'Test',
+      isDone: false,
+    };
+    const newAppData: AppData = { data: mockAppData.data.concat(newToDo) };
+    const mockReq: Partial<Request> = { params: { id: '123abc' } };
+    const mockRes: Partial<Response> = {
+      status: jest.fn(() => mockRes),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
+    
+    toggleToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith(newAppData);
+  });
+
+  test('', () => {});
+
+  test('', () => {});
+});
