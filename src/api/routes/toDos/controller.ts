@@ -1,12 +1,9 @@
 import { Request, Response } from 'express';
 
 import { getData, saveData, bodyShapeIsOk } from './utils';
+import { ERROR_MESSAGE, BAD_REQUEST_MESSAGE, NOT_FOUND_MESSAGE } from '../../constants';
 
 import { AppData, ToDoData } from '../../types';
-
-const ERROR_MESSAGE: string = 'Something went wrong :(';
-const NOT_FOUND_MESSAGE: string = 'Not found :(';
-const BAD_REQUEST_MESSAGE: string = 'Bad request :(';
 
 export const getToDoList = (req: Request, res: Response): Response<AppData | string> => {
   const data: AppData = getData();

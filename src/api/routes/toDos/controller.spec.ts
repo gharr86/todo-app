@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { getToDoList, addToDo, toggleToDo } from './controller';
 import { getData, saveData } from './utils';
+import { ERROR_MESSAGE, BAD_REQUEST_MESSAGE, NOT_FOUND_MESSAGE } from '../../constants';
 
 import { AppData, ToDoData } from '../../types';
 
@@ -57,7 +58,7 @@ describe('getToDoList', () => {
     getToDoList(mockReq as Request, mockRes as Response);
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
+    expect(mockRes.send).toHaveBeenCalledWith(ERROR_MESSAGE);
   });
 });
 
@@ -93,7 +94,7 @@ describe('addToDo', () => {
 
     expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(400);
-    expect(mockRes.send).toHaveBeenCalledWith('Bad request :(');
+    expect(mockRes.send).toHaveBeenCalledWith(BAD_REQUEST_MESSAGE);
   });
 
   test('when data is not received, 500 status is set and error message is sent', () => {
@@ -105,7 +106,7 @@ describe('addToDo', () => {
 
     expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
+    expect(mockRes.send).toHaveBeenCalledWith(ERROR_MESSAGE);
   });
 });
 
@@ -145,7 +146,7 @@ describe('toggleToDo', () => {
 
     expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(404);
-    expect(mockRes.send).toHaveBeenCalledWith('Not found :(');
+    expect(mockRes.send).toHaveBeenCalledWith(NOT_FOUND_MESSAGE);
   });
 
   test('when data is not received, 500 status is set and error message is sent', () => {
@@ -157,6 +158,6 @@ describe('toggleToDo', () => {
 
     expect(mockSaveData).not.toHaveBeenCalled();
     expect(mockRes.status).toHaveBeenCalledWith(500);
-    expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
+    expect(mockRes.send).toHaveBeenCalledWith(ERROR_MESSAGE);
   });
 });
