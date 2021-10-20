@@ -21,5 +21,9 @@ export const bodyShapeIsOk = (body: ToDoData): boolean => {
   const titleIsOk: boolean = 'title' in body && typeof body.title === 'string';
   const isDoneIsOk: boolean = 'isDone' in body && typeof body.isDone === 'boolean';
 
+  console.log('idIsOk', body.id, idIsOk);
+  console.log('titleIsOk', body.title, titleIsOk);
+  console.log('isDoneIsOk', body.isDone, isDoneIsOk);
+
   return idIsOk && titleIsOk && isDoneIsOk;
 };

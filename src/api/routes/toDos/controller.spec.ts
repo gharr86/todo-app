@@ -57,16 +57,61 @@ describe('getToDoList', () => {
 });
 
 describe('addToDo', () => {
-  mockGetData.mockReturnValueOnce(mockAppData);
+  test('when body is OK, data is saved', () => {
+    mockGetData.mockReturnValueOnce(mockAppData);
+  
+    const newToDo: ToDoData = {
+      id: '345cde',
+      title: 'Test',
+      isDone: false,
+    };
+    const newAppData: AppData = { data: mockAppData.data.concat(newToDo) };
+    const mockReq: Partial<Request> = { body: newToDo };
+    const mockRes: Partial<Response> = {
+      status: jest.fn(() => mockRes),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
 
-  const newToDo: ToDoData = {
-    id: '345cde',
-    title: 'Test',
-    isDone: false,
-  };
-  const mockReq: Partial<Request> = { body: newToDo };
-  const mockRes: Partial<Response> = {
-    status: jest.fn(() => mockRes),
-    json: jest.fn(),
-  };
+    addToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith(newAppData);
+  });
+
+  test('when body is not OK, 400 status is set and error message is sent', () => {
+    mockGetData.mockReturnValueOnce(mockAppData);
+  
+    const newToDo = {
+      id: '345cde',
+      isDone: false,
+    };
+    const mockReq: Partial<Request> = { body: newToDo };
+    const mockRes: Partial<Response> = {
+      status: jest.fn(() => mockRes),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
+
+    addToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockRes.status).toHaveBeenCalledWith(400);
+    expect(mockRes.send).toHaveBeenCalledWith('Bad request :(');
+  });
+
+  test('when data is not received, 500 status is set and error message is sent', () => {
+    mockGetData.mockReturnValueOnce(undefined);
+
+    const mockReq: Partial<Request> = {};
+    const mockRes: Partial<Response> = {
+      status: jest.fn(() => mockRes),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
+
+    addToDo(mockReq as Request, mockRes as Response);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.send).toHaveBeenCalledWith('Something went wrong :(');
+  });
 });

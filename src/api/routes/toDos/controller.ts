@@ -21,7 +21,9 @@ export const addToDo = (req: Request, res: Response): Response<AppData | string>
 
   const currentData: AppData = getData();
 
-  if (currentData.data) {
+  if (currentData?.data) {
+    console.log('BODY', body);
+    console.log('ISOK', bodyShapeIsOk(body));
     if (bodyShapeIsOk(body)) {
       currentData.data.push(body);
   
@@ -41,7 +43,7 @@ export const toggleToDo = (req: Request, res: Response): Response<AppData | stri
 
   const currentData: AppData = getData();
 
-  if (currentData.data) {
+  if (currentData?.data) {
     const selectedIndex: number = currentData.data.findIndex((el: ToDoData): boolean => el.id === id);
 
     if (selectedIndex !== -1) {
