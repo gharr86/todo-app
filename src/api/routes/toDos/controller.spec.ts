@@ -32,6 +32,7 @@ let mockRes: Partial<Response>;
 
 beforeEach(() => {
   mockRes = {
+    // @ts-ignore: Unreachable code error
     status: jest.fn(() => mockRes),
     json: jest.fn(),
     send: jest.fn(),
