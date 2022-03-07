@@ -20,14 +20,11 @@ You will also see any lint errors in the console.
 Runs server in development mode.\
 Base URL is [http://localhost:3001](http://localhost:3001)
 
-- /todos/get
-Returns saved todo list
+- /todos/get --> Returns saved todo list
 
-- /todos/save
-Adds todo element. Body shape must be `{ id: string, title: string, isDone: boolean }`
+- /todos/save --> Adds todo element. Body shape must be `{ id: string, title: string, isDone: boolean }`
 
-- /todos/:id
-Toggles element `isDone` value
+- /todos/:id -- Toggles element `isDone` value
 
 ### `npm run dev`
 
